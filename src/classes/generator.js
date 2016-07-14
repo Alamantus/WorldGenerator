@@ -14,9 +14,12 @@ export default class Generator {
     return this.dieRoll(2);
   }
   static randomInt(min, max) {
-    // Returns a random number between min and max.
+    // Returns a random number between min (inclusive) and max (exclusive).
     // Math.seedrandom(this.seed);
-    return Math.floor(Math.random() * (max - min)) + min;
+    min = Math.floor(min);
+    max = Math.floor(max);
+    const value = Math.floor(Math.random() * (max - min)) + min;
+    return (value < max) ? value : max - 1;
   }
   static stringIsInArray(str, strArray) {
     // Just use Array.prototype.some() like below.

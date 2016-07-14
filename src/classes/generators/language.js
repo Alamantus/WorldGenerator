@@ -2,7 +2,7 @@ import Generator from '../generator';
 import Lexicon from './linguistics/lexicon';
 
 export default class Language extends Generator {
-  constructor(seed, useIPA = false, minWordLength = 1, maxWordLength = 15) {
+  constructor(seed, useIPA = false, minWordLength = 1, maxWordLength = 10) {
     super(seed);
 
     this.allowConsecutiveConsonants = Generator.dieRoll(6);
@@ -70,7 +70,8 @@ export default class Language extends Generator {
       }
     });
 
-  	return resultLetters;
+    // If no letters end up chosen, re-run the function.
+  	return (resultLetters.length) ? resultLetters : chooseLetters(type, useIPA);
   }
 
   randomVowel() {
@@ -102,19 +103,28 @@ export default class Language extends Generator {
     			return this.randomConsonant();
     		}
 
-      // Otherwise, either consonants can't connect and vowels can or neither can, so...
-    	} else {
+      // Otherwise, either consonants can't connect and vowels can, so...
+      } else if (!this.allowConsecutiveConsonants && this.allowConsecutiveVowels) {
         // If the last letter is a consonant, pick a vowel.
     		if (this.consonants.some(letter => letter === lastLetter)) {
     			return this.randomVowel();
+        }
+
+      // Otherwise, neither consonants nor vowels can connect, so...
+    	} else {
+        // If the last letter is a vowel, pick a consonant.
+    		if (this.vowels.some(letter => letter === lastLetter)) {
+    			return this.randomConsonant();
+
+        // Otherwise, the letter is a consonant, so a vowel must be picked.
         } else {
-          return this.randomConsonant();
-    		}
+          return this.randomVowel();
+        }
     	}
     }
 
     // If nothing's returned by the time the end is reached, just get a random letter.
-    // return this.randomLetter();
+    return this.randomLetter();
   }
 
   generateWord(minLength = this.MINWORDLENGTH, maxLength = this.MAXWORDLENGTH, capitalize = false) {

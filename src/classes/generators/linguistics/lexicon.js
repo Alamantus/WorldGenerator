@@ -7,10 +7,11 @@ export default class Lexicon {
 
     this.words = {};
     this.words.nouns = this.generateWordList(30);
-    this.words.verbs = this.generateWordList(30, 40);
-    this.words.adjectives = this.generateWordList(20, 40);
+    this.words.verbs = this.generateWordList(30);
+    this.words.adjectives = this.generateWordList(20);
     this.words.adpositions = this.generateWordList(3, 20);
-    this.words.adverbs = this.generateWordList(3, 500);
+    // this.words.adverbs = this.generateWordList(3, 500);
+    this.words.adverbs = this.generateWordList(3);
     this.words.pronouns = this.generateWordList(1, 10);
   }
 
@@ -26,7 +27,7 @@ export default class Lexicon {
     return this.words.adjectives.length;
   }
 
-  get numPrepositions() {
+  get numAdpositions() {
     return this.words.adpositions.length;
   }
 
@@ -38,7 +39,7 @@ export default class Lexicon {
     return this.words.pronouns.length;
   }
 
-  generateUniqueWord() {
+  generateUniqueWord(list = []) {
     // Generate a word not already in this.dictionary{}.
     const word = this.lang.generateWord(this.lang.MINWORDLENGTH, this.lang.MAXWORDLENGTH);
     let exists = false;
@@ -52,17 +53,28 @@ export default class Lexicon {
       }
     });
 
+    // If a list is provided,
+    if (list !== []) {
+      // Make sure the generated word isn't already in there.
+      if ([...list].some(existingWord => existingWord == word)) {
+        // then set exists.
+        exists = true;
+      }
+    }
+
     // If the word doesn't exist, return it, otherwise, repeat the function.
     return (!exists) ? word : this.generateUniqueWord(this.lang.MINWORDLENGTH, this.lang.MAXWORDLENGTH);
   }
 
-  generateWordList(minLength = 1, maxLength = 1000) {
+  // FIXME: Don't keep maxLength's default value at 40!
+  generateWordList(minLength = 1, maxLength = 40) {
     // Generate an array of unique words.
     const listLength = Generator.randomInt(minLength, maxLength);
     const result = [];
 
     for (let i = 0; i < listLength; i++) {
-      result.push(this.generateUniqueWord());
+      // push the list so this.generateUniqueWord() won't make doubles for this list.
+      result.push(this.generateUniqueWord(result));
     }
 
     return result.sort();
