@@ -39,6 +39,13 @@ export default class Lexicon {
     return this.words.pronouns.length;
   }
 
+  get length() {
+    let number = 0;
+    // Iterate over each part of speech already in the dictonary
+    Object.keys(this.words).forEach(key => number += this.words[key].length);
+    return number;
+  }
+
   generateUniqueWord(list = []) {
     // Generate a word not already in this.dictionary{}.
     const word = this.lang.generateWord(this.lang.MINWORDLENGTH, this.lang.MAXWORDLENGTH);

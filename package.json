@@ -10,7 +10,7 @@
     "compile": "babel ./src --out-dir ./lib",
     "test": "node ./lib/main.js",
     "retest": "npm-run-all --sequential compile test",
-    "browserify": "browserify ./lib/main.js --o ./bin/worldgenerator.js",
+    "browserify": "browserify ./lib/main.js -o ./bin/worldgenerator.js",
     "uglify": "uglifyjs ./bin/worldgenerator.js -c -m -o ./bin/worldgenerator.min.js",
     "build": "npm-run-all --sequential compile browserify uglify"
   },
