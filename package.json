@@ -1,0 +1,38 @@
+{
+  "name": "WorldGenerator",
+  "title": "World Generator",
+  "main": "./lib/main.js",
+  "description": "An attempt to create an in-depth world generator that you can explore.",
+  "version": "0.0.0",
+  "author": "Robbie Antenesse <gamedev@alamantus.com>",
+  "scripts": {
+    "watch": "babel ./src --watch --out-dir ./lib",
+    "compile": "babel ./src --out-dir ./lib",
+    "test": "node ./lib/main.js",
+    "retest": "npm-run-all --sequential compile test",
+    "browserify": "browserify ./lib/main.js --o ./bin/worldgenerator.js",
+    "uglify": "uglifyjs ./bin/worldgenerator.js -c -m -o ./bin/worldgenerator.min.js",
+    "build": "npm-run-all --sequential compile browserify uglify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://Alamantus@github.com/Alamantus/WorldGenerator.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alamantus/WorldGenerator/issues"
+  },
+  "homepage": "https://github.com/Alamantus/WorldGenerator",
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-preset-es2015": "^6.9.0",
+    "browserify": "^13.0.1",
+    "npm-run-all": "^2.3.0",
+    "uglifyjs": "^2.4.10"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}
