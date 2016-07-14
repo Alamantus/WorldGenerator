@@ -1,3 +1,4 @@
+import Tools from '../tools';
 import Generator from '../generator';
 import Lexicon from './linguistics/lexicon';
 
@@ -47,6 +48,30 @@ export default class Language extends Generator {
     return this.lex.words.pronouns;
   }
 
+  get randomNoun() {
+    return Tools.arrayRandom(this.nouns);
+  }
+
+  get randomVerb() {
+    return Tools.arrayRandom(this.verbs);
+  }
+
+  get randomAdjective() {
+    return Tools.arrayRandom(this.adjectives);
+  }
+
+  get randomAdposition() {
+    return Tools.arrayRandom(this.adpositions);
+  }
+
+  get randomAdverb() {
+    return Tools.arrayRandom(this.adverbs);
+  }
+
+  get randomPronoun() {
+    return Tools.arrayRandom(this.pronouns);
+  }
+
   chooseLetters(type, useIPA = false) {
     const CONSONANTS = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'];
     const IPACONSONANTS = ['\u0299', '\u03B2', '\u0255', '\u00E7', '\u0256', '\u00F0', '\u02A4', '\u025F', '\u0261', '\u0262', '\u0266', '\u0267', '\u0127', '\u0265', '\u029C', '\u029D', '\u026D', '\u026C', '\u026B', '\u026E', '\u029F', '\u0271', '\u0270', '\u014B', '\u0273', '\u0272', '\u0274', '\u0278', '\u03B8', '\u0279', '\u027A', '\u027E', '\u027B', '\u0280', '\u0281', '\u027D', '\u0282', '\u0283', '\u0288', '\u02A7', '\u028B', '\u2C71', '\u0263', '\u028D', '\u03C7', '\u028E', '\u0291', '\u0290', '\u0292', '\u0294', '\u02A1', '\u0295', '\u02A2'];
@@ -71,15 +96,15 @@ export default class Language extends Generator {
     });
 
     // If no letters end up chosen, re-run the function.
-  	return (resultLetters.length) ? resultLetters : chooseLetters(type, useIPA);
+  	return (resultLetters.length) ? resultLetters : this.chooseLetters(type, useIPA);
   }
 
   randomVowel() {
-    return this.vowels[Generator.randomInt(0, this.vowels.length)];
+    return Tools.arrayRandom(this.vowels);
   }
 
   randomConsonant() {
-    return this.consonants[Generator.randomInt(0, this.consonants.length)];
+    return Tools.arrayRandom(this.consonants);
   }
 
   randomLetter(wordToCheck = '') {
@@ -149,7 +174,7 @@ export default class Language extends Generator {
       'noun-adverb-adjective'
     ];
 
-    return possibleOrders[Generator.randomInt(0, possibleOrders.length)];
+    return Tools.arrayRandom(possibleOrders);
   }
 
   chooseSentenceOrder() {
@@ -162,6 +187,80 @@ export default class Language extends Generator {
       'subject-object-verb'
     ];
 
-    return possibleOrders[Generator.randomInt(0, possibleOrders.length)];
+    return Tools.arrayRandom(possibleOrders);
+  }
+
+  generateModifiedNoun() {
+    const noun = this.randomNoun;
+    const adjective = (Generator.coinFlip()) ? this.randomAdjective : '';
+    const adverb = (adjective && Generator.coinFlip()) ? this.randomAdverb : '';
+
+    switch (this.descriptiveOrder) {
+      case 'adverb-adjective-noun': {
+        return (((adverb) ? adverb + ' ' : '') + ((adjective) ? adjective + ' ' : '') + noun);
+        break;
+      }
+      case 'adjective-adverb-noun': {
+        return (((adjective) ? adjective + ' ' : '') + ((adverb) ? adverb + ' ' : '') + noun);
+        break;
+      }
+      case 'adjective-noun-adverb': {
+        return (((adjective) ? adjective + ' ' : '') + noun + ((adverb) ? ' ' + adverb : ''));
+        break;
+      }
+      case 'adverb-noun-adjective': {
+        return (((adverb) ? adverb + ' ' : '') + noun + ((adjective) ? ' ' + adjective : ''));
+        break;
+      }
+      case 'noun-adjective-adverb': {
+        return (noun + ((adjective) ? ' ' + adjective : '') + ((adverb) ? ' ' + adverb : ''));
+        break;
+      }
+      case 'noun-adverb-adjective': {
+        return (noun + ((adverb) ? ' ' + adverb : '') + ((adjective) ? ' ' + adjective : ''));
+        break;
+      }
+      default: {
+        return 'error';
+        break;
+      }
+    }
+  }
+
+  generateSentence(punctuation = '.') {
+    const subject = this.generateModifiedNoun();
+    const verb = this.randomVerb;
+    const object = this.generateModifiedNoun();
+
+    switch (this.sentenceOrder) {
+      case 'subject-verb-object': {
+        return Tools.capitalize(subject) + ' ' + verb + ' ' + object + punctuation;
+        break;
+      }
+      case 'verb-subject-object': {
+        return Tools.capitalize(verb) + ' ' + subject + ' ' + object + punctuation;
+        break;
+      }
+      case 'verb-object-subject': {
+        return Tools.capitalize(verb) + ' ' + object + ' ' + subject + punctuation;
+        break;
+      }
+      case 'object-verb-subject': {
+        return Tools.capitalize(object) + ' ' + verb + ' ' + subject + punctuation;
+        break;
+      }
+      case 'object-subject-verb': {
+        return Tools.capitalize(object) + ' ' + subject + ' ' + verb + punctuation;
+        break;
+      }
+      case 'subject-object-verb': {
+        return Tools.capitalize(subject) + ' ' + object + ' ' + verb + punctuation;
+        break;
+      }
+      default: {
+        return 'error';
+        break;
+      }
+    }
   }
 }

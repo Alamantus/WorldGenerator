@@ -18,8 +18,7 @@ export default class Generator {
     // Math.seedrandom(this.seed);
     min = Math.floor(min);
     max = Math.floor(max);
-    const value = Math.floor(Math.random() * (max - min)) + min;
-    return (value < max) ? value : max - 1;
+    return Math.floor(Math.random() * (max - min)) + min;
   }
   static stringIsInArray(str, strArray) {
     // Just use Array.prototype.some() like below.
