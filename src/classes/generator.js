@@ -1,6 +1,9 @@
+const seedrandom = require('seedrandom');
+
 export default class Generator {
-  constructor(seed = 2) {
-    this.seedValue = seed;
+  constructor(seed = Generator.randomSeed()) {
+    this.seedValue = seed.toString();
+    seedrandom(this.seedValue, { global: true });
   }
 
   static dieRoll(sides) {
@@ -20,8 +23,9 @@ export default class Generator {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
   }
-  static stringIsInArray(str, strArray) {
-    // Just use Array.prototype.some() like below.
-    return strArray.some(arrVal => str === arrVal);
+  static randomSeed() {
+    // seedrandom() is the generator function, so to run that function,
+    // you need to run (seedrandom())() to run it anonymously.
+    return (seedrandom())().toString().substr(2, 10);
   }
 }

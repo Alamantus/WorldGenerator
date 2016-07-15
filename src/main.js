@@ -1,8 +1,9 @@
 import Generator from './classes/generator';
 import World from './classes/generators/world';
 
-const myWorld = new World(Generator.randomInt(0, 10));
-console.log(myWorld.lang.name);
+const myWorld = new World('test seed');
+
+console.log(myWorld.lang.name, "- Seed:", myWorld.seedValue);
 console.log("Consonants:", myWorld.lang.consonants);
 console.log("Vowels:", myWorld.lang.vowels);
 console.log("Allow Consecutive Consonants:", myWorld.lang.allowConsecutiveConsonants);
