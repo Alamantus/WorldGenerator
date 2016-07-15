@@ -1,22 +1,22 @@
-import Tools from '../tools';
-import Generator from '../generator';
-import Lexicon from './linguistics/lexicon';
+import Tools from '../../tools';
+import Generator from '../../generator';
+import Lexicon from './lexicon';
 
 export default class Language extends Generator {
-  constructor(seed, useIPA = false, minWordLength = 1, maxWordLength = 10) {
+  constructor(seed, { useIPA = false, minWordLength = 1, maxWordLength = 10 } = {}) {
     super(seed);
 
-    this.allowConsecutiveConsonants = Generator.dieRoll(6);
-    this.allowConsecutiveVowels = Generator.dieRoll(4);
+    this.allowConsecutiveConsonants = this.dieRoll(6);
+    this.allowConsecutiveVowels = this.dieRoll(4);
     this.consonants = this.chooseLetters('consonants', useIPA);
     this.vowels = this.chooseLetters('vowels', useIPA);
     this.descriptiveOrder = this.chooseDescriptiveOrder();
     this.sentenceOrder = this.chooseSentenceOrder();
-    this.hasAdverbs = Generator.coinFlip();
-    this.hasPronouns = Generator.coinFlip();
-    this.hasArticles = Generator.coinFlip();
-    this.hasPossessive = Generator.coinFlip();
-    this.allowMergeWords = Generator.dieRoll(10);
+    this.hasAdverbs = this.coinFlip();
+    this.hasPronouns = this.coinFlip();
+    this.hasArticles = this.coinFlip();
+    this.hasPossessive = this.coinFlip();
+    this.allowMergeWords = this.dieRoll(10);
     this.MINWORDLENGTH = minWordLength;
     this.MAXWORDLENGTH = maxWordLength;
     this.lex = new Lexicon(this);
@@ -49,27 +49,27 @@ export default class Language extends Generator {
   }
 
   get randomNoun() {
-    return Tools.arrayRandom(this.nouns);
+    return this.arrayRandom(this.nouns);
   }
 
   get randomVerb() {
-    return Tools.arrayRandom(this.verbs);
+    return this.arrayRandom(this.verbs);
   }
 
   get randomAdjective() {
-    return Tools.arrayRandom(this.adjectives);
+    return this.arrayRandom(this.adjectives);
   }
 
   get randomAdposition() {
-    return Tools.arrayRandom(this.adpositions);
+    return this.arrayRandom(this.adpositions);
   }
 
   get randomAdverb() {
-    return Tools.arrayRandom(this.adverbs);
+    return this.arrayRandom(this.adverbs);
   }
 
   get randomPronoun() {
-    return Tools.arrayRandom(this.pronouns);
+    return this.arrayRandom(this.pronouns);
   }
 
   chooseLetters(type, useIPA = false) {
@@ -90,7 +90,7 @@ export default class Language extends Generator {
   	}
 
     possibleLetters.forEach((letter) => {
-      if (Generator.coinFlip()) {
+      if (this.coinFlip()) {
         resultLetters.push(letter);
       }
     });
@@ -100,18 +100,18 @@ export default class Language extends Generator {
   }
 
   randomVowel() {
-    return Tools.arrayRandom(this.vowels);
+    return this.arrayRandom(this.vowels);
   }
 
   randomConsonant() {
-    return Tools.arrayRandom(this.consonants);
+    return this.arrayRandom(this.consonants);
   }
 
   randomLetter(wordToCheck = '') {
     // If there is no word to check *or* consecutives of both vowels and consonants are allowed,
     // then just pick a random letter.
     if (!wordToCheck || (this.allowConsecutiveConsonants && this.allowConsecutiveVowels)) {
-      if (Generator.coinFlip()) {
+      if (this.coinFlip()) {
         return this.randomVowel();
       } else {
         return this.randomConsonant();
@@ -153,7 +153,7 @@ export default class Language extends Generator {
   }
 
   generateWord(minLength = this.MINWORDLENGTH, maxLength = this.MAXWORDLENGTH, capitalize = false) {
-    const numberOfLetters = Generator.randomInt(minLength, maxLength);
+    const numberOfLetters = this.randomInt(minLength, maxLength);
 
     let result = (capitalize) ? this.randomLetter().toUpperCase() : this.randomLetter();
 
@@ -174,7 +174,7 @@ export default class Language extends Generator {
       'noun-adverb-adjective'
     ];
 
-    return Tools.arrayRandom(possibleOrders);
+    return this.arrayRandom(possibleOrders);
   }
 
   chooseSentenceOrder() {
@@ -187,13 +187,13 @@ export default class Language extends Generator {
       'subject-object-verb'
     ];
 
-    return Tools.arrayRandom(possibleOrders);
+    return this.arrayRandom(possibleOrders);
   }
 
   generateModifiedNoun() {
     const noun = this.randomNoun;
-    const adjective = (Generator.coinFlip()) ? this.randomAdjective : '';
-    const adverb = (adjective && Generator.coinFlip()) ? this.randomAdverb : '';
+    const adjective = (this.coinFlip()) ? this.randomAdjective : '';
+    const adverb = (adjective && this.coinFlip()) ? this.randomAdverb : '';
 
     switch (this.descriptiveOrder) {
       case 'adverb-adjective-noun': {

@@ -1,27 +1,53 @@
-import Generator from './classes/generator';
+import Tools from './classes/tools';
 import World from './classes/generators/world';
 
-const myWorld = new World('test seed');
+const testWorld = new World('test seed');
 
-console.log(myWorld.lang.name, "- Seed:", myWorld.seedValue);
-console.log("Consonants:", myWorld.lang.consonants);
-console.log("Vowels:", myWorld.lang.vowels);
-console.log("Allow Consecutive Consonants:", myWorld.lang.allowConsecutiveConsonants);
-console.log("Allow Consecutive Vowels:", myWorld.lang.allowConsecutiveVowels);
-console.log(myWorld.lang.lex.numNouns, "Nouns:", myWorld.lang.nouns);
-console.log(myWorld.lang.lex.numVerbs, "Verbs:", myWorld.lang.verbs);
-console.log(myWorld.lang.lex.numAdjectives, "Adjectives:", myWorld.lang.adjectives);
-console.log(myWorld.lang.lex.numAdpositions, "Adpositions:", myWorld.lang.adpositions);
-console.log(myWorld.lang.lex.numAdverbs, "Adverbs:", myWorld.lang.adverbs);
-console.log(myWorld.lang.lex.numPronouns, "Pronouns:", myWorld.lang.pronouns);
-console.log(myWorld.lang.lex.length, "Total Words");
-console.log("Descriptive Order:\n", myWorld.lang.descriptiveOrder);
-console.log("Sentence Order:\n", myWorld.lang.sentenceOrder);
-console.log("Example Sentence:\n", myWorld.lang.generateSentence());
-// console.log(myWorld.seedValue, myWorld.name, myWorld.lang.name, myWorld.lang.seedValue);
+// testBiomes(testWorld);
+testPerson(testWorld.countries[0].population[0]);
+testCountry(testWorld.countries[0]);
+// testLanguage(testWorld.countries[0].languages[0]);
 
-// myWorld.seedValue = 11;
-// myWorld.MakeName('new wurld');
-// myWorld.lang.seedValue = 18;
-// myWorld.lang.MakeName('new lang');
-// console.log(myWorld.seedValue, myWorld.name, myWorld.lang.name, myWorld.lang.seedValue);
+function testLanguage(language) {
+  console.log(language.name, '- Seed:', `'${language.seedValue}'`);
+  console.log('Consonants:', language.consonants);
+  console.log('Vowels:', language.vowels);
+  console.log('Allow Consecutive Consonants:', language.allowConsecutiveConsonants);
+  console.log('Allow Consecutive Vowels:', language.allowConsecutiveVowels);
+  console.log(language.lex.numNouns, 'Nouns:', language.nouns);
+  console.log(language.lex.numVerbs, 'Verbs:', language.verbs);
+  console.log(language.lex.numAdjectives, 'Adjectives:', language.adjectives);
+  console.log(language.lex.numAdpositions, 'Adpositions:', language.adpositions);
+  console.log(language.lex.numAdverbs, 'Adverbs:', language.adverbs);
+  console.log(language.lex.numPronouns, 'Pronouns:', language.pronouns);
+  console.log(language.lex.length, 'Total Words');
+  console.log('Descriptive Order:\n', language.descriptiveOrder);
+  console.log('Sentence Order:\n', language.sentenceOrder);
+  console.log('Example Sentence:\n', language.generateSentence());
+  console.log();
+}
+
+function testBiomes(world) {
+  console.log(world.name, '- Seed:', `'${world.seedValue}'`);
+  console.log('Neutral Biomes:', world.existingBiomes.neutral);
+  console.log('Hostile Biomes:', world.existingBiomes.hostile);
+  console.log(world.possibleBiomes.length, 'Total Biomes:');
+  console.log();
+}
+
+function testCountry(country) {
+  console.log(country.name, '- Seed:', `'${country.seedValue}'`);
+  console.log('Biome:', country.biome);
+  console.log('Life Expectancy:', country.lifeExpectancy);
+  console.log();
+}
+
+function testPerson(person) {
+  console.log(person.fullName, '- Seed:', `'${person.seedValue}'`);
+  console.log('Age:', person.age);
+  console.log('Understands Self As:', `'${person.thing.identity}'`);
+  console.log('Lives in:', person.location.scope.name);
+  console.log('Languages known:', person.knownLanguages[0].name);
+  console.log('Current Location:', `(${person.location.x}, ${person.location.y})`);
+  console.log();
+}

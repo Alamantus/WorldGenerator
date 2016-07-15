@@ -1,5 +1,5 @@
 import Generator from '../../generator';
-import Language from '../language';
+import Language from './language';
 
 export default class Lexicon {
   constructor(language) {
@@ -76,7 +76,7 @@ export default class Lexicon {
   // FIXME: Don't keep maxLength's default value at 40!
   generateWordList(minLength = 1, maxLength = 40) {
     // Generate an array of unique words.
-    const listLength = Generator.randomInt(minLength, maxLength);
+    const listLength = this.lang.randomInt(minLength, maxLength);
     const result = [];
 
     for (let i = 0; i < listLength; i++) {
