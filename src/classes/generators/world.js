@@ -1,16 +1,23 @@
 import Generator from '../generator';
+import Language from './linguistics/language';
+import Species from './things/species';
 import Country from './locations/country';
 
 export default class World extends Generator {
   constructor(seed, minBiomes = 3) {
     super(seed);
 
+    // Create a "default" language so you can name things.
+    this.defaultLanguage = new Language(this.seedValue);
+
+    this.name = this.defaultLanguage.generateWord(4, 8, true);
+
     this.existingBiomes = this.generateBiomes(minBiomes);
 
-    this.countries = [new Country(this)];
+    // Force sencience upon the first species.
+    this.existingSpecies = [new Species(this, { isSentient: true })];
 
-    // Generate the name from the first country's native language.
-    this.name = this.countries[0].languages[0].generateWord(4, 8, true);
+    this.countries = [new Country(this)];
   }
 
   get possibleBiomes() {

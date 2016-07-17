@@ -3,9 +3,10 @@ import World from './classes/generators/world';
 
 const testWorld = new World('test seed');
 
-// testBiomes(testWorld);
 testPerson(testWorld.countries[0].population[0]);
-testCountry(testWorld.countries[0]);
+testSpecies(testWorld.existingSpecies[0]);
+// testBiomes(testWorld);
+// testCountry(testWorld.countries[0]);
 // testLanguage(testWorld.countries[0].languages[0]);
 
 function testLanguage(language) {
@@ -42,10 +43,21 @@ function testCountry(country) {
   console.log();
 }
 
+function testSpecies(species) {
+  console.log(species.name, '- Seed:', `'${species.seedValue}'`);
+  console.log('Sentient?', (species.isSentient) ? 'Yes' : 'No');
+  console.log('Life Expectancy (years):', species.lifeExpectancy);
+  console.log('Reaches Maturity At Age:', species.ageOfMaturity);
+  console.log('Average Height (cm):', species.averageHeight, '(give or take', species.heightDeviation, 'cm)');
+  console.log();
+}
+
 function testPerson(person) {
   console.log(person.fullName, '- Seed:', `'${person.seedValue}'`);
+  console.log('Species:', person.species.name);
   console.log('Age:', person.age);
-  console.log('Understands Self As:', `'${person.thing.identity}'`);
+  console.log('Height:', person.height, 'cm');
+  console.log('Is Identified As:', `'${person.thing.identity}'`);
   console.log('Lives in:', person.location.scope.name);
   console.log('Languages known:', person.knownLanguages[0].name);
   console.log('Current Location:', `(${person.location.x}, ${person.location.y})`);

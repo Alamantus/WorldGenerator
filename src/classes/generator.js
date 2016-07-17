@@ -20,6 +20,9 @@ export default class Generator {
   randomInt(min, max) {
     return Tools.randomInt(min, max, this.rng);
   }
+  randomDeviation(value) {
+    return this.randomInt(-value, value);
+  }
   arrayRandom(array) {
     return Tools.arrayRandom(array, this.rng);
   }
