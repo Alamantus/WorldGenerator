@@ -19,6 +19,6 @@ export default class Country extends Generator {
     // Generate a name using the country's native language.
     this.name = this.languages[0].generateWord(4, 8, true);
 
-    this.population = [new Person(this, this.world.existingSpecies[0])];
+    this.population = [new Person(this, this.world.dominantSpecies)];
   }
 }

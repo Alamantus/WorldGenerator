@@ -26,6 +26,30 @@ export default class Generator {
   arrayRandom(array) {
     return Tools.arrayRandom(array, this.rng);
   }
+  arrayShuffle(array, granularity = 3, doubleShuffle = false) {
+    // Stupid, unintelligent "shuffling".
+    let result = [];
+    let splits = [];
+
+    // Create as many split arrays as granularity.
+    for (let g = 0; g < granularity; g++) {
+      splits.push([]);
+    }
+
+    array.forEach((item, index) => {
+      const list = this.randomInt(0, splits.length);
+      splits[list].push(index);
+    });
+
+    // Mash the indexes together and make the result out of the indexes collected.
+    splits.forEach((item) => {
+      item.forEach((arrayIndex) => {
+        result.push(array[arrayIndex]);
+      })
+    });
+
+    return (doubleShuffle) ? this.arrayShuffle(result, granularity) : result;
+  }
   randomSeed() {
     // seedrandom() is the generator function, so to run that function,
     // you need to run (seedrandom())() to run it anonymously.

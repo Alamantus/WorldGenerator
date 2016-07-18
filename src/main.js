@@ -1,10 +1,13 @@
 import Tools from './classes/tools';
 import World from './classes/generators/world';
 
-const testWorld = new World('test seed');
+const testWorld = new World('test seed', { minSpeciesPerLifeform: 1, maxSpeciesPerLifeform: 10 });
 
 testPerson(testWorld.countries[0].population[0]);
-testSpecies(testWorld.existingSpecies[0]);
+
+// testWorld.existingSpecies.forEach(species => testSpecies(species));
+
+testSpecies(testWorld.dominantSpecies);
 // testBiomes(testWorld);
 // testCountry(testWorld.countries[0]);
 // testLanguage(testWorld.countries[0].languages[0]);
@@ -45,6 +48,7 @@ function testCountry(country) {
 
 function testSpecies(species) {
   console.log(species.name, '- Seed:', `'${species.seedValue}'`);
+  console.log('Lifeform Type:', species.lifeform);
   console.log('Sentient?', (species.isSentient) ? 'Yes' : 'No');
   console.log('Life Expectancy (years):', species.lifeExpectancy);
   console.log('Reaches Maturity At Age:', species.ageOfMaturity);

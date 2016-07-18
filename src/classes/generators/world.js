@@ -1,10 +1,15 @@
 import Generator from '../generator';
 import Language from './linguistics/language';
-import Species from './things/species';
+import Species from './things/living/species';
 import Country from './locations/country';
 
 export default class World extends Generator {
-  constructor(seed, minBiomes = 3) {
+  constructor(seed, {
+    minBiomes = 3,
+    minLifeforms = 3,
+    minSpeciesPerLifeform = 10,
+    maxSpeciesPerLifeform = 100
+  } = {}) {
     super(seed);
 
     // Create a "default" language so you can name things.
@@ -14,14 +19,26 @@ export default class World extends Generator {
 
     this.existingBiomes = this.generateBiomes(minBiomes);
 
-    // Force sencience upon the first species.
-    this.existingSpecies = [new Species(this, { isSentient: true })];
+    this.existingLifeforms = this.generateLifeforms(minLifeforms);
+
+    this.existingSpecies = this.generateSpecies(minSpeciesPerLifeform, maxSpeciesPerLifeform);
+    this.dominantSpecies = this.arrayRandom(this.sentientSpecies);
 
     this.countries = [new Country(this)];
   }
 
   get possibleBiomes() {
     return [...this.existingBiomes.neutral, ...this.existingBiomes.hostile];
+  }
+
+  get sentientSpecies() {
+    let result = [];
+
+    this.existingSpecies.forEach((species) => {
+      if (species.isSentient) result.push(species);
+    });
+
+    return result;
   }
 
   generateBiomes(minBiomes = 3) {
@@ -64,6 +81,54 @@ export default class World extends Generator {
       }
     }
 
-    return ([...result.neutral, ...result.hostile].length > minBiomes) ? result : this.generateBiomes(minBiomes);
+    return ([...result.neutral, ...result.hostile].length >= minBiomes) ? result : this.generateBiomes(minBiomes);
+  }
+
+  generateLifeforms(minTypes = 3) {
+    // Return a "shufled" array of lifeforms.
+    const possibleTypes = [
+      'plantoid',
+      'mammalian',
+      'reptilian',
+      'avian',
+      'insectoid'
+    ];
+    const baseLength = possibleTypes.length;
+    for (let i = 0; i < baseLength; i++) {
+      for (let j = 0; j < baseLength; j++) {
+        if (i !== j) {
+          possibleTypes.push(possibleTypes[i] + '-' + possibleTypes[j]);
+        }
+      }
+    }
+
+    let result = [];
+
+    possibleTypes.forEach((type) => {
+      if (this.coinFlip()) {
+        result.push(type);
+      }
+    });
+
+    return (result.length >= minTypes) ? this.arrayShuffle(result, 5, true) : this.generateLifeforms(minTypes);
+  }
+
+  generateSpecies(minPerLifeform = 10, maxPerLifeform = 100) {
+    const forcedSentience = this.randomInt(0, this.existingLifeforms.length);
+    let result = [];
+
+    this.existingLifeforms.forEach((type, index) => {
+      const numberOfSpecies = this.randomInt(minPerLifeform, maxPerLifeform);
+      for (let i = 0; i < numberOfSpecies; i++) {
+        if (index === forcedSentience && i === 0) {
+          // Force the first in the "shuffled" list to be sentient.
+          result.push(new Species(this, type, { isSentient: true }));
+        } else {
+          result.push(new Species(this, type));
+        }
+      }
+    });
+
+    return result;
   }
 }

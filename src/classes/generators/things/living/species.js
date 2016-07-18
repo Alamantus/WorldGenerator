@@ -1,8 +1,8 @@
-import Generator from '../../generator';
+import Generator from '../../../generator';
 
 export default class Species extends Generator {
   // Species exist relative to a World, which has many Species.
-  constructor(world, {
+  constructor(world, lifeform, {
     isSentient,
 
     minLifeLength = 1,
@@ -27,6 +27,8 @@ export default class Species extends Generator {
     super(world.seedValue);
 
     this.world = world;
+
+    this.lifeform = lifeform;
 
     // Generate a name from the world's first language.
     this.name = this.world.defaultLanguage.generateWord(undefined, undefined, true);
